@@ -12,41 +12,49 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+//
+// cherry can be on snake
+//
+//
 public class Snake implements ActionListener, KeyListener {
 
   public static Snake snake;
-  private static JFrame jframe;
-  private static RenderPanel renderPanel;
+  public static JFrame jframe; // was non static
+  public static RenderPanel renderPanel; // type was renderpanel and non-static\
   public static MenuPanel menuPanel;
-  private Timer timer = new Timer(100, this);
-  private ArrayList<Point> snakeParts = new ArrayList<Point>();
-  private static final int UP = 0;
-  private static final int DOWN = 1;
-  private static final int LEFT = 2;
-  private static final int RIGHT = 3;
-  private static boolean up = false;
-  private static boolean down = false;
-  private static boolean left = false;
-  private static boolean right = false;
-  private static boolean directionUpdated = true;
+  public Timer timer = new Timer(100, this);
+  public ArrayList<Point> snakeParts = new ArrayList<Point>();
+  public static final int UP = 0;
+  public static final int DOWN = 1;
+  public static final int LEFT = 2;
+  public static final int RIGHT = 3;
+  public static boolean up = false;
+  public static boolean down = false;
+  public static boolean left = false;
+  public static boolean right = false;
+  public static boolean directionUpdated = true;
+
   public static final int SCALE = 30;
-  private int direction = DOWN;
-  private int score;
-  private int tailLength;
-  private Point head;
-  private Point cherry;
-  private Random random;
-  private boolean over = false;
-  private Dimension dim;
-  private boolean paused = false;
+  public int ticks = 0;
+  public int direction = DOWN;
+  public int score;
+  public int tailLength;
+  public Point head;
+  public Point cherry;
+  public Random random;
+  public boolean over = false;
+  public Dimension dim;
+  public boolean paused = false;
   public static int windowX = SCALE * 20 + 6;
   public static int windowY = SCALE * 20 - 1;
-  private static boolean started = false;
-  private boolean auto = false;
-  private int height; //
+  public static boolean started = false;
+  public JPanel menu;
+  public boolean auto = false;
+  public int height;
 
   public Snake() {
     try {
@@ -54,14 +62,11 @@ public class Snake implements ActionListener, KeyListener {
     } catch (Exception e) {
       System.out.println("Exception: " + e);
     }
+
     createFrame();
   }
 
-  public static void main(String[] args) {
-    snake = new Snake();
-  }
-
-  public void createFrame() { // create a frame at the center of the screen with menu
+  public void createFrame() {
     dim = Toolkit.getDefaultToolkit().getScreenSize();
     jframe = new JFrame("Snake");
     jframe.setVisible(true);
@@ -69,19 +74,23 @@ public class Snake implements ActionListener, KeyListener {
     jframe.setResizable(false);
     jframe.setLocation(dim.width / 2 - jframe.getWidth() / 2,
         dim.height / 2 - jframe.getHeight() / 2);
+
     jframe.add(menuPanel = new MenuPanel());
     jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     jframe.addKeyListener(this);
+
   }
 
   public void startGame() {
     jframe.getContentPane().removeAll();
-    jframe.add(renderPanel = new RenderPanel());// if the game started put renderPanel on frame
+    jframe.add(renderPanel = new RenderPanel());
+
     directionUpdated = false;
     up = false;
     down = false;
     left = false;
     right = false;
+
     renderPanel.repaint();
     renderPanel.revalidate();
     started = true;
@@ -89,6 +98,7 @@ public class Snake implements ActionListener, KeyListener {
     paused = false;
     score = 0;
     tailLength = 7;
+    ticks = 0;
     direction = DOWN;
     head = new Point(0, 0);
     random = new Random();
@@ -98,16 +108,18 @@ public class Snake implements ActionListener, KeyListener {
     jframe.requestFocusInWindow();
   }
 
-  public void startAuto() { // auto mode
+  public void startAuto() {
     auto = true;
     jframe.getContentPane().removeAll();
     jframe.add(renderPanel = new RenderPanel());
     jframe.removeKeyListener(this);
+
     directionUpdated = false;
     up = false;
     down = false;
     left = false;
     right = false;
+
     renderPanel.repaint();
     renderPanel.revalidate();
     started = true;
@@ -115,6 +127,7 @@ public class Snake implements ActionListener, KeyListener {
     paused = false;
     score = 0;
     tailLength = 7;
+    ticks = 0;
     direction = DOWN;
     head = new Point(0, 0);
     random = new Random();
@@ -127,7 +140,9 @@ public class Snake implements ActionListener, KeyListener {
   @Override
   public void actionPerformed(ActionEvent arg0) {
     if (started) {
-      if (!auto) {// if non-auto mode we set the direction
+
+
+      if (!auto) {
         if (up == true && direction != DOWN && directionUpdated == false) {
           direction = UP;
           directionUpdated = true;
@@ -146,39 +161,48 @@ public class Snake implements ActionListener, KeyListener {
         }
       }
       renderPanel.repaint();
-
-      if (over) { // check if game is over
-        paused = true; // pause the game
-        Object[] options = {"Продолжим", "Давай меню"}; // create a little window
+      ticks++;
+      if (over) {
+        paused = true;
+        Object[] options = {"Продолжим", "Давай меню"};
         int n = JOptionPane.showOptionDialog(null, "Что делаем?", "Игра окончена",
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
-                                                                                    // buttons
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, // do not use a custom
+                                                                           // Icon
+            options, // the titles of buttons
             options[0]); // default button title
-        if (n > 0) {// if pressed "Давай меню"
+        if (n > 0) {
+
           timer.stop();
+          started = !started;
           n = 0;
           over = false;
+
           snakeParts = new ArrayList<Point>();
+
           up = false;
           down = false;
           left = false;
           right = false;
           directionUpdated = true;
+
+          ticks = 0;
           direction = DOWN;
           over = false;
           paused = false;
           started = false;
+          // snake = new Snake();
           jframe.getContentPane().removeAll();
-          jframe.add(menuPanel = new MenuPanel()); // menu panel
+
+          jframe.add(menuPanel = new MenuPanel());
           jframe.repaint();
           jframe.revalidate();
-        } else { // if pressed "Продолжим"
-          snake.startGame(); // start new game
+        } else {
+          snake.startGame();
         }
       }
 
-      if (head != null && !over && !paused) {
-        if (auto) { // if auto mode - switch the direction
+      if (/* ticks % 5 == 0 && */ head != null && !over && !paused) { ////////////
+        if (auto) {
           switch (direction) {
             case DOWN:
               if (head.y == windowY / SCALE - 1)
@@ -192,7 +216,8 @@ public class Snake implements ActionListener, KeyListener {
               height = random.nextInt(windowY / SCALE - 1);
               break;
             case UP:
-              if (head.y == height && head.x != windowX / SCALE - 1) {
+              if (/* (head.y==1 && head.x!=windowX/SCALE-1) || */
+              head.y == height && head.x != windowX / SCALE - 1) {
                 direction = RIGHT;;;
               }
               if (head.y == 0 && head.x == windowX / SCALE - 1)
@@ -202,61 +227,57 @@ public class Snake implements ActionListener, KeyListener {
               if (head.x == 0)
                 direction = DOWN;
               break;
+
           }
         }
-
         directionUpdated = false;
-        snakeParts.add(new Point(head.x, head.y));
 
-        // change location of the head. If head is on the tail - game over
+        ticks++;
+        snakeParts.add(new Point(head.x, head.y));
         if (direction == UP) {
           if (head.y - 1 >= 0 && noTailAt(head.x, head.y - 1))
             head = new Point(head.x, head.y - 1);
           else
             over = true;
         }
-
         if (direction == DOWN) {
           if (head.y < windowY / SCALE - 1 && noTailAt(head.x, head.y + 1))
             head = new Point(head.x, head.y + 1);
           else
             over = true;
         }
-
         if (direction == LEFT) {
           if (head.x - 1 >= 0 && noTailAt(head.x - 1, head.y))
             head = new Point(head.x - 1, head.y);
           else
             over = true;
         }
-
         if (direction == RIGHT) {
-          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y))
+          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y)) // ?
             head = new Point(head.x + 1, head.y);
           else
             over = true;
         }
 
-        if (snakeParts.size() > tailLength) // remove the last snake part
+        if (snakeParts.size() > tailLength)
           snakeParts.remove(0);
-
         if (cherry != null) {
-          if (head.equals(cherry)) { // if snake eat the cherry
+          if (head.equals(cherry)) {
             score += 10;
             tailLength++;
-            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1)) // if we have space for
-                                                                          // cherry
+            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1))
               setCherryLocation();
             else
               cherry = null;
           }
+
         }
       }
     }
   }
 
-  public boolean noTailAt(int x, int y) { // if tail exist on (x,y) point - return false, else -
-                                          // true
+
+  public boolean noTailAt(int x, int y) {
     for (int i = 1; i < snakeParts.size() - 1; i++) {
       if (snakeParts.get(i).equals(new Point(x, y)))
         return false;
@@ -264,65 +285,36 @@ public class Snake implements ActionListener, KeyListener {
     return true;
   }
 
+  public static void main(String[] args) {
+
+
+    snake = new Snake();
+
+
+  }
+
   public void setCherryLocation() {
-    cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));// set
-                                                                                         // random
-                                                                                         // cherry
-                                                                                         // location
+    cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
     for (int i = 0; i < snakeParts.size(); i++) {
-      if (head.getLocation().equals(cherry.getLocation())) { // if cherry on the head - change
-                                                             // location
+      if (head.getLocation().equals(cherry.getLocation())) {
         cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
-        i = 0; // restart checking
+        i = 0;
       }
-      if (snakeParts.get(i).getLocation().equals(cherry.getLocation())) { // if cherry on the snake
-                                                                          // part - change location
+      if (snakeParts.get(i).getLocation().equals(cherry.getLocation())) {
         cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
         i = 0;
       }
     }
   }
 
-  public ArrayList<Point> getSnakeParts() {
-    return snakeParts;
-  }
 
-  public int getCherryX() {
-    return cherry.x;
-  }
-
-  public int getCherryY() {
-    return cherry.y;
-  }
-
-  public int getHeadX() {
-    return head.x;
-  }
-
-  public int getHeadY() {
-    return head.y;
-  }
-
-  public int getTailLength() {
-    return tailLength;
-  }
-
-  public int getScore() {
-    return score;
-  }
-
-  public boolean started() {
-    return started;
-  }
-
-  public void changeTimer(int n) {
-    timer = new Timer(n, this);
-  }
 
   @Override
   public void keyPressed(KeyEvent e) {
     if (started) {
+
       int i = e.getKeyCode();
+
       if (i == KeyEvent.VK_LEFT)
         left = true;
       if (i == KeyEvent.VK_RIGHT)
@@ -331,6 +323,7 @@ public class Snake implements ActionListener, KeyListener {
         up = true;
       if (i == KeyEvent.VK_DOWN)
         down = true;
+
       if (i == KeyEvent.VK_SPACE)
         paused = !paused;
     }
@@ -348,10 +341,15 @@ public class Snake implements ActionListener, KeyListener {
         up = false;
       if (i == KeyEvent.VK_DOWN)
         down = false;
+
     }
+
   }
 
   @Override
   public void keyTyped(KeyEvent arg0) {}
 
+  public void changeTimer(int n) {
+    timer = new Timer(n, this);
+  }
 }
