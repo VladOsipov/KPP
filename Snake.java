@@ -46,7 +46,7 @@ public class Snake implements ActionListener, KeyListener {
   public static int windowY = SCALE * 20 - 1;
   private static boolean started = false;
   private boolean auto = false;
-  private int height; //
+  private int height;
 
   public Snake() {
     try {
@@ -96,7 +96,6 @@ public class Snake implements ActionListener, KeyListener {
     cherry = new Point(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
     timer.start();
     jframe.requestFocusInWindow();
-    
   }
 
   public void startAuto() { // auto mode
@@ -109,7 +108,7 @@ public class Snake implements ActionListener, KeyListener {
     down = false;
     left = false;
     right = false;
-    renderPanel.repaint(); 
+    renderPanel.repaint();
     renderPanel.revalidate();
     started = true;
     over = false;
