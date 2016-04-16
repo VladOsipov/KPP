@@ -108,7 +108,7 @@ public class Snake implements ActionListener, KeyListener {
     down = false;
     left = false;
     right = false;
-    renderPanel.repaint();
+    renderPanel.repaint(); 
     renderPanel.revalidate();
     started = true;
     over = false;
