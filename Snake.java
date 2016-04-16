@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 public class Snake implements ActionListener, KeyListener {
 
   public static Snake snake;
-  private static JFrame jframe;
+  public static JFrame jframe;
   private static RenderPanel renderPanel;
   public static MenuPanel menuPanel;
   private Timer timer = new Timer(100, this);
@@ -114,13 +114,13 @@ public class Snake implements ActionListener, KeyListener {
     over = false;
     paused = false;
     score = 0;
-    tailLength = 7;
+    tailLength = 100;
     direction = DOWN;
     head = new Point(0, 0);
     random = new Random();
     snakeParts.clear();
     cherry = new Point(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
-    timer = new Timer(1, this);
+    timer = new Timer(5, this);
     timer.start();
   }
 
@@ -190,10 +190,12 @@ public class Snake implements ActionListener, KeyListener {
               if (head.x % 2 == 0)
                 direction = DOWN;
               height = random.nextInt(windowY / SCALE - 1);
+              if (height == 0)
+                ++height;
               break;
             case UP:
               if (head.y == height && head.x != windowX / SCALE - 1) {
-                direction = RIGHT;;;
+                direction = RIGHT;
               }
               if (head.y == 0 && head.x == windowX / SCALE - 1)
                 direction = LEFT;
