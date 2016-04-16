@@ -18,7 +18,7 @@ import javax.swing.UIManager;
 public class Snake implements ActionListener, KeyListener {
 
   public static Snake snake;
-  private static JFrame jframe;
+  public static JFrame jframe;
   private static RenderPanel renderPanel;
   public static MenuPanel menuPanel;
   private Timer timer = new Timer(100, this);
@@ -46,7 +46,7 @@ public class Snake implements ActionListener, KeyListener {
   public static int windowY = SCALE * 20 - 1;
   private static boolean started = false;
   private boolean auto = false;
-  private int height;
+  private int height; //
 
   public Snake() {
     try {
@@ -108,19 +108,19 @@ public class Snake implements ActionListener, KeyListener {
     down = false;
     left = false;
     right = false;
-    renderPanel.repaint();
+    renderPanel.repaint(); 
     renderPanel.revalidate();
     started = true;
     over = false;
     paused = false;
     score = 0;
-    tailLength = 7;
+    tailLength = 100;
     direction = DOWN;
     head = new Point(0, 0);
     random = new Random();
     snakeParts.clear();
     cherry = new Point(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
-    timer = new Timer(1, this);
+    timer = new Timer(5, this);
     timer.start();
   }
 
@@ -128,7 +128,7 @@ public class Snake implements ActionListener, KeyListener {
   public void actionPerformed(ActionEvent arg0) {
     if (started) {
       if (!auto) {// if non-auto mode we set the direction
-        if (up == true && direction != DOWN && directionUpdated == false) { 
+        if (up == true && direction != DOWN && directionUpdated == false) {
           direction = UP;
           directionUpdated = true;
         }
@@ -145,10 +145,10 @@ public class Snake implements ActionListener, KeyListener {
           directionUpdated = true;
         }
       }
-      renderPanel.repaint(); 
+      renderPanel.repaint();
 
       if (over) { // check if game is over
-        paused = true; //pause the game
+        paused = true; // pause the game
         Object[] options = {"Продолжим", "Давай меню"}; // create a little window
         int n = JOptionPane.showOptionDialog(null, "Что делаем?", "Игра окончена",
             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
@@ -172,8 +172,8 @@ public class Snake implements ActionListener, KeyListener {
           jframe.add(menuPanel = new MenuPanel()); // menu panel
           jframe.repaint();
           jframe.revalidate();
-        } else { // if pressed "Продлжим"
-          snake.startGame(); //start new game
+        } else { // if pressed "Продолжим"
+          snake.startGame(); // start new game
         }
       }
 
@@ -190,10 +190,12 @@ public class Snake implements ActionListener, KeyListener {
               if (head.x % 2 == 0)
                 direction = DOWN;
               height = random.nextInt(windowY / SCALE - 1);
+              if (height == 0)
+                ++height;
               break;
             case UP:
               if (head.y == height && head.x != windowX / SCALE - 1) {
-                direction = RIGHT;;;
+                direction = RIGHT;
               }
               if (head.y == 0 && head.x == windowX / SCALE - 1)
                 direction = LEFT;
@@ -208,7 +210,7 @@ public class Snake implements ActionListener, KeyListener {
         directionUpdated = false;
         snakeParts.add(new Point(head.x, head.y));
 
-        // change location of the head
+        // change location of the head. If head is on the tail - game over
         if (direction == UP) {
           if (head.y - 1 >= 0 && noTailAt(head.x, head.y - 1))
             head = new Point(head.x, head.y - 1);
@@ -231,20 +233,21 @@ public class Snake implements ActionListener, KeyListener {
         }
 
         if (direction == RIGHT) {
-          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y)) // ?
+          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y))
             head = new Point(head.x + 1, head.y);
           else
             over = true;
         }
 
-        if (snakeParts.size() == tailLength+1)
+        if (snakeParts.size() > tailLength) // remove the last snake part
           snakeParts.remove(0);
-        
+
         if (cherry != null) {
-          if (head.equals(cherry)) {
+          if (head.equals(cherry)) { // if snake eat the cherry
             score += 10;
             tailLength++;
-            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1))
+            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1)) // if we have space for
+                                                                          // cherry
               setCherryLocation();
             else
               cherry = null;
