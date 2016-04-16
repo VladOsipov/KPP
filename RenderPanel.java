@@ -26,7 +26,7 @@ public class RenderPanel extends JPanel {
         g.fillRect(point.x * Snake.SCALE, point.y * Snake.SCALE, Snake.SCALE, Snake.SCALE);
         g.setColor(YELLOW); // fill a little yellow rectangle inside the snake part
         g.fillRect(point.x * Snake.SCALE + 5, point.y * Snake.SCALE + 5, Snake.SCALE - 10,
-            Snake.SCALE - 10); 
+            Snake.SCALE - 10);
         g.setColor(GREEN);
       }
 

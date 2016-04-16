@@ -96,7 +96,6 @@ public class Snake implements ActionListener, KeyListener {
     cherry = new Point(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
     timer.start();
     jframe.requestFocusInWindow();
-    
   }
 
   public void startAuto() { // auto mode
