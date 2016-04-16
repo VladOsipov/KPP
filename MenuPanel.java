@@ -26,9 +26,7 @@ public class MenuPanel extends JPanel implements ChangeListener {
   static final int FPS_INIT = 0;
   private int value;
   private int counter = 0;
-
   private UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
-
 
   MenuPanel() {
 
