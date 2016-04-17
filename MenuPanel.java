@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+
 @SuppressWarnings("serial")
 public class MenuPanel extends JPanel implements ChangeListener {
 
@@ -28,6 +29,7 @@ public class MenuPanel extends JPanel implements ChangeListener {
   private UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
 
   MenuPanel() {
+
     lookAndFeel = new JButton("LookAndFeel"); // start the game
     lookAndFeel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -60,11 +62,16 @@ public class MenuPanel extends JPanel implements ChangeListener {
     add(auto); // add to frame
 
     speed = new JSlider(JSlider.HORIZONTAL, FPS_MIN, FPS_MAX, FPS_INIT);
+
     speed.addChangeListener(this);
     speed.setMajorTickSpacing(10);
     speed.setPaintTicks(true);
+
     add(speed);
+
+
   }
+
 
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -86,7 +93,10 @@ public class MenuPanel extends JPanel implements ChangeListener {
     String string = "SPEED " + str;
     g.setColor(Color.BLACK);
     g.drawString(string, (int) getWidth() / 2 - string.length(), 100);
+
+
   }
+
 
   @Override
   public void stateChanged(ChangeEvent e) {
