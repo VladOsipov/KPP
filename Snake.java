@@ -354,5 +354,4 @@ public class Snake implements ActionListener, KeyListener {
 
   @Override
   public void keyTyped(KeyEvent arg0) {}
-
 }

@@ -1,4 +1,4 @@
-package Snake; 
+package Snake;
 
 import java.awt.Color;
 import java.awt.Graphics;
