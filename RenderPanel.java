@@ -29,16 +29,15 @@ public class RenderPanel extends JPanel {
         gComponent.setColor(GREEN);
       }
 
-      gComponent.fillRect(snake.getHeadX() * Snake.SCALE, snake.getHeadY() * Snake.SCALE,
-          Snake.SCALE, Snake.SCALE); // fill the head
+      gComponent.fillRect(snake.getHeadX() * Snake.SCALE, snake.getHeadY() * Snake.SCALE, Snake.SCALE,
+          Snake.SCALE); // fill the head
       gComponent.setColor(Color.RED); // fill the cherry
       if (Snake.snake.getTailLength() < 379)
-        gComponent.fillRect(snake.getCherryX() * Snake.SCALE, snake.getCherryY() * Snake.SCALE,
-            Snake.SCALE, Snake.SCALE);
+        gComponent.fillRect(snake.getCherryX() * Snake.SCALE, snake.getCherryY() * Snake.SCALE, Snake.SCALE,
+            Snake.SCALE);
       String string = "Score " + snake.getScore() + ", Length " + snake.getTailLength();
       gComponent.setColor(Color.BLACK);
-      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2, 30); // print the
-                                                                                     // score
+      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2, 30); // print the score
 
     }
   }
