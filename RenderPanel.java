@@ -16,7 +16,7 @@ public class RenderPanel extends JPanel {
   private final int screenStartX = 0;
   private final int screenStartY = 0;
 
-  /** this method paint the game */
+  /** this method paint the game*/
   public void paintComponent(Graphics gComponent) {
     if (Snake.snake.started()) {
 

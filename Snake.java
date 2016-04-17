@@ -49,7 +49,7 @@ public class Snake implements ActionListener, KeyListener {
   private int height;
   private final int POINT = 10;
 
-  /** Standard constructor */
+  /** Standard constructor*/
   public Snake() {
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());

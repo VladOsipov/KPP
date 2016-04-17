@@ -72,7 +72,7 @@ public class MenuPanel extends JPanel implements ChangeListener {
     add(speed);
   }
 
-  /** paintComponent method */
+  /** paintComponent method*/
   public void paintComponent(Graphics gComponent) {
     super.paintComponent(gComponent);
     String str = "";
