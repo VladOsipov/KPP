@@ -20,52 +20,59 @@ public class MenuPanel extends JPanel implements ChangeListener {
   private JButton auto;
   private JButton lookAndFeel;
   private JSlider speed;
-  static final int FPS_MIN = 0;
-  static final int FPS_MAX = 3;
-  static final int FPS_INIT = 0;
+  static final int MIN = 0;
+  static final int MAX = 3;
+  static final int INIT = 0;
   private int value;
   private int counter = 0;
+  private final int easySpeed = 90;
+  private final int mediumSpeed = 70;
+  private final int hardSpeed = 40;
+  private final int unrealSpeed = 20;
+
   private UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
 
+
   MenuPanel() {
-    lookAndFeel = new JButton("LookAndFeel"); // start the game
+    lookAndFeel = new JButton("LookAndFeel");
     lookAndFeel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         try {
           if (counter == lafs.length - 1)
             counter = 0;
           UIManager.setLookAndFeel(lafs[++counter].getClassName());
-          SwingUtilities.updateComponentTreeUI(Snake.jframe);
+          SwingUtilities.updateComponentTreeUI(Snake.jFrame);
         } catch (Exception ee) {
           ee.printStackTrace();
         }
       }
     });
-    add(lookAndFeel); // add to frame
+    add(lookAndFeel);
 
-    btn = new JButton("Старт"); // start the game
+    btn = new JButton("Старт");
     btn.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Snake.snake.startGame(); // if "Старт" pressed
+        Snake.snake.startGame();
       }
     });
-    add(btn); // add to frame
+    add(btn);
 
-    auto = new JButton("Авто"); // auto mode
+    auto = new JButton("Авто");
     auto.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Snake.snake.startAuto(); // if "Авто" pressed
+        Snake.snake.startAuto();
       }
     });
-    add(auto); // add to frame
+    add(auto);
 
-    speed = new JSlider(JSlider.HORIZONTAL, FPS_MIN, FPS_MAX, FPS_INIT);
+    speed = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
     speed.addChangeListener(this);
     speed.setMajorTickSpacing(10);
     speed.setPaintTicks(true);
     add(speed);
   }
 
+  /** paintComponent method */
   public void paintComponent(Graphics gComponent) {
     super.paintComponent(gComponent);
     String str = "";
@@ -88,22 +95,23 @@ public class MenuPanel extends JPanel implements ChangeListener {
     gComponent.drawString(string, (int) getWidth() / 2 - string.length(), 100);
   }
 
+  /** Calls when we do smth with slider */
   @Override
   public void stateChanged(ChangeEvent e) {
     JSlider source = (JSlider) e.getSource();
     value = (int) (source.getValue());
     switch (value) {
       case 3:
-        Snake.snake.changeTimer(20);
+        Snake.snake.changeTimer(unrealSpeed);
         break;
       case 2:
-        Snake.snake.changeTimer(40);
+        Snake.snake.changeTimer(hardSpeed);
         break;
       case 1:
-        Snake.snake.changeTimer(70);
+        Snake.snake.changeTimer(mediumSpeed);
         break;
       case 0:
-        Snake.snake.changeTimer(90);
+        Snake.snake.changeTimer(easySpeed);
         break;
     }
     this.repaint();

@@ -9,37 +9,44 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class RenderPanel extends JPanel {
 
-  private Color YELLOW = new Color(16646040);
-  private Color GREEN = new Color(10026908);
+  private final int YELLOW_COLOR = 16646040;
+  private final int GREEN_COLOR = 10026908;
+  private Color YELLOW = new Color(YELLOW_COLOR);
+  private Color GREEN = new Color(GREEN_COLOR);
+  private final int screenStartX = 0;
+  private final int screenStartY = 0;
 
+  /** this method paint the game */
   public void paintComponent(Graphics gComponent) {
     if (Snake.snake.started()) {
 
       super.paintComponent(gComponent);
       gComponent.setColor(YELLOW);
-      gComponent.fillRect(0, 0, Snake.windowX, Snake.windowY);// fill all the window
+      /** Fill all window */
+      gComponent.fillRect(screenStartX, screenStartY, Snake.windowX, Snake.windowY);
       Snake snake = Snake.snake;
       gComponent.setColor(GREEN);
 
-      for (Point point : snake.getSnakeParts()) { // fill all snake parts
+      /** fill all snake parts */
+      for (Point point : snake.getSnakeParts()) {
         gComponent.fillRect(point.x * Snake.SCALE, point.y * Snake.SCALE, Snake.SCALE, Snake.SCALE);
-        gComponent.setColor(YELLOW); // fill a little yellow rectangle inside the snake part
+        gComponent.setColor(YELLOW);
         gComponent.fillRect(point.x * Snake.SCALE + 5, point.y * Snake.SCALE + 5, Snake.SCALE - 10,
             Snake.SCALE - 10);
         gComponent.setColor(GREEN);
       }
 
+      /** fill head */
       gComponent.fillRect(snake.getHeadX() * Snake.SCALE, snake.getHeadY() * Snake.SCALE,
-          Snake.SCALE, Snake.SCALE); // fill the head
-      gComponent.setColor(Color.RED); // fill the cherry
+          Snake.SCALE, Snake.SCALE);
+      /** fill the cherry */
+      gComponent.setColor(Color.RED);
       if (Snake.snake.getTailLength() < 379)
         gComponent.fillRect(snake.getCherryX() * Snake.SCALE, snake.getCherryY() * Snake.SCALE,
             Snake.SCALE, Snake.SCALE);
       String string = "Score " + snake.getScore() + ", Length " + snake.getTailLength();
       gComponent.setColor(Color.BLACK);
-      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2, 30); // print the
-                                                                                     // score
-
+      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2, 30);
     }
   }
 }

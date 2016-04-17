@@ -14,13 +14,13 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+/** class Snake */
 public class Snake implements ActionListener, KeyListener {
 
   public static Snake snake;
-  public static JFrame jframe;
-  private static RenderPanel renderPanel;
-  public static MenuPanel menuPanel;
-  private Timer timer = new Timer(100, this);
+  public static JFrame jFrame;
+  private final int SPEED = 100;
+  private Timer timer = new Timer(SPEED, this);
   private ArrayList<Point> snakeParts = new ArrayList<Point>();
   private static final int UP = 0;
   private static final int DOWN = 1;
@@ -41,12 +41,15 @@ public class Snake implements ActionListener, KeyListener {
   private boolean over = false;
   private Dimension dim;
   private boolean paused = false;
-  public static int windowX = SCALE * 20 + 6;
-  public static int windowY = SCALE * 20 - 1;
+  private final static int scalesCount = 20;
+  public static int windowX = SCALE * scalesCount + 6;
+  public static int windowY = SCALE * scalesCount - 1;
   private static boolean started = false;
   private boolean auto = false;
   private int height;
+  private final int POINT = 10;
 
+  /** Standard constructor */
   public Snake() {
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -56,33 +59,36 @@ public class Snake implements ActionListener, KeyListener {
     createFrame();
   }
 
+  /** main function */
   public static void main(String[] args) {
     snake = new Snake();
   }
 
-  public void createFrame() { // create a frame at the center of the screen with menu
+  /** this function create frame at the center of the screen with menu */
+  public void createFrame() {
     dim = Toolkit.getDefaultToolkit().getScreenSize();
-    jframe = new JFrame("Snake");
-    jframe.setVisible(true);
-    jframe.setSize(windowX, windowY);
-    jframe.setResizable(false);
-    jframe.setLocation(dim.width / 2 - jframe.getWidth() / 2,
-        dim.height / 2 - jframe.getHeight() / 2);
-    jframe.add(menuPanel = new MenuPanel());
-    jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    jframe.addKeyListener(this);
+    jFrame = new JFrame("Snake");
+    jFrame.setVisible(true);
+    jFrame.setSize(windowX, windowY);
+    jFrame.setResizable(false);
+    jFrame.setLocation(dim.width / 2 - jFrame.getWidth() / 2,
+        dim.height / 2 - jFrame.getHeight() / 2);
+    jFrame.add(new MenuPanel());
+    jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    jFrame.addKeyListener(this);
   }
 
+  /** startGame method make all variables at initial state and start the timer */
   public void startGame() {
-    jframe.getContentPane().removeAll();
-    jframe.add(renderPanel = new RenderPanel());// if the game started put renderPanel on frame
+    jFrame.getContentPane().removeAll();
+    jFrame.add(new RenderPanel());
     directionUpdated = false;
     up = false;
     down = false;
     left = false;
     right = false;
-    renderPanel.repaint();
-    renderPanel.revalidate();
+    jFrame.repaint();
+    jFrame.revalidate();
     started = true;
     over = false;
     paused = false;
@@ -94,26 +100,27 @@ public class Snake implements ActionListener, KeyListener {
     snakeParts.clear();
     cherry = new Point(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
     timer.start();
-    jframe.requestFocusInWindow();
+    jFrame.requestFocusInWindow();
   }
 
-  public void startAuto() { // auto mode
+  /** startAuto method initial variables, make 'auto' true and start the timer */
+  public void startAuto() {
     auto = true;
-    jframe.getContentPane().removeAll();
-    jframe.add(renderPanel = new RenderPanel());
-    jframe.removeKeyListener(this);
+    jFrame.getContentPane().removeAll();
+    jFrame.add(new RenderPanel());
+    jFrame.removeKeyListener(this);
     directionUpdated = false;
     up = false;
     down = false;
     left = false;
     right = false;
-    renderPanel.repaint();
-    renderPanel.revalidate();
+    jFrame.repaint();
+    jFrame.revalidate();
     started = true;
     over = false;
     paused = false;
     score = 0;
-    tailLength = 100;
+    tailLength = 10;
     direction = DOWN;
     head = new Point(0, 0);
     random = new Random();
@@ -123,37 +130,39 @@ public class Snake implements ActionListener, KeyListener {
     timer.start();
   }
 
+  /** This method calls every timer tick */
   @Override
   public void actionPerformed(ActionEvent arg0) {
     if (started) {
-      if (!auto) {// if non-auto mode we set the direction
-        if (up == true && direction != DOWN && directionUpdated == false) {
+      if (!auto) {
+        /** if non-auto mode we set the direction */
+        if (up && direction != DOWN && !directionUpdated) {
           direction = UP;
           directionUpdated = true;
         }
-        if (down == true && direction != UP && directionUpdated == false) {
+        if (down && direction != UP && !directionUpdated) {
           direction = DOWN;
           directionUpdated = true;
         }
-        if (left == true && direction != RIGHT && directionUpdated == false) {
+        if (left && direction != RIGHT && !directionUpdated) {
           direction = LEFT;
           directionUpdated = true;
         }
-        if (right == true && direction != LEFT && directionUpdated == false) {
+        if (right && direction != LEFT && !directionUpdated) {
           direction = RIGHT;
           directionUpdated = true;
         }
       }
-      renderPanel.repaint();
+      jFrame.repaint();
 
-      if (over) { // check if game is over
-        paused = true; // pause the game
-        Object[] options = {"Продолжим", "Давай меню"}; // create a little window
+      /** check if the game is over */
+      if (over) {
+        paused = true;
+        /** Create little window */
+        Object[] options = {"Продолжим", "Давай меню"};
         int n = JOptionPane.showOptionDialog(null, "Что делаем?", "Игра окончена",
-            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, // the titles of
-                                                                                    // buttons
-            options[0]); // default button title
-        if (n > 0) {// if pressed "Давай меню"
+            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        if (n > 0) {
           timer.stop();
           n = 0;
           over = false;
@@ -167,41 +176,48 @@ public class Snake implements ActionListener, KeyListener {
           over = false;
           paused = false;
           started = false;
-          jframe.getContentPane().removeAll();
-          jframe.add(menuPanel = new MenuPanel()); // menu panel
-          jframe.repaint();
-          jframe.revalidate();
-        } else { // if pressed "Продолжим"
-          snake.startGame(); // start new game
+          jFrame.getContentPane().removeAll();
+          jFrame.add(new MenuPanel());
+          jFrame.repaint();
+          jFrame.revalidate();
+        } else {
+          snake.startGame();
         }
       }
 
       if (head != null && !over && !paused) {
-        if (auto) { // if auto mode - switch the direction
+        /** if auto mode - switch the direction */
+        if (auto) {
           switch (direction) {
             case DOWN:
-              if (head.y == windowY / SCALE - 1)
+              if (head.y == windowY / SCALE - 1) {
                 direction = RIGHT;
+              }
               break;
             case RIGHT:
-              if (head.x % 2 != 0)
+              if (head.x % 2 != 0) {
                 direction = UP;
-              if (head.x % 2 == 0)
+              }
+              if (head.x % 2 == 0) {
                 direction = DOWN;
+              }
               height = random.nextInt(windowY / SCALE - 1);
-              if (height == 0)
+              if (height == 0) {
                 ++height;
+              }
               break;
             case UP:
               if (head.y == height && head.x != windowX / SCALE - 1) {
                 direction = RIGHT;
               }
-              if (head.y == 0 && head.x == windowX / SCALE - 1)
+              if (head.y == 0 && head.x == windowX / SCALE - 1) {
                 direction = LEFT;
+              }
               break;
             case LEFT:
-              if (head.x == 0)
+              if (head.x == 0) {
                 direction = DOWN;
+              }
               break;
           }
         }
@@ -209,75 +225,79 @@ public class Snake implements ActionListener, KeyListener {
         directionUpdated = false;
         snakeParts.add(new Point(head.x, head.y));
 
-        // change location of the head. If head is on the tail - game over
+        /** change location of the head. If head is on the tail - game over */
         if (direction == UP) {
-          if (head.y - 1 >= 0 && noTailAt(head.x, head.y - 1))
+          if (head.y - 1 >= 0 && noTailAt(head.x, head.y - 1)) {
             head = new Point(head.x, head.y - 1);
-          else
+          } else {
             over = true;
+          }
         }
 
         if (direction == DOWN) {
-          if (head.y < windowY / SCALE - 1 && noTailAt(head.x, head.y + 1))
+          if (head.y < windowY / SCALE - 1 && noTailAt(head.x, head.y + 1)) {
             head = new Point(head.x, head.y + 1);
-          else
+          } else {
             over = true;
+          }
         }
 
         if (direction == LEFT) {
-          if (head.x - 1 >= 0 && noTailAt(head.x - 1, head.y))
+          if (head.x - 1 >= 0 && noTailAt(head.x - 1, head.y)) {
             head = new Point(head.x - 1, head.y);
-          else
+          } else
             over = true;
         }
 
         if (direction == RIGHT) {
-          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y))
+          if (head.x < windowX / SCALE - 1 && noTailAt(head.x + 1, head.y)) {
             head = new Point(head.x + 1, head.y);
-          else
+          } else {
             over = true;
+          }
         }
 
-        if (snakeParts.size() > tailLength) // remove the last snake part
+        if (snakeParts.size() > tailLength) {
           snakeParts.remove(0);
+        }
 
         if (cherry != null) {
-          if (head.equals(cherry)) { // if snake eat the cherry
-            score += 10;
+          /** if snake eat the cherry */
+          if (head.equals(cherry)) {
+            score += POINT;
             tailLength++;
-            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1)) // if we have space for
-                                                                          // cherry
+            if (tailLength < ((windowX / SCALE) * (windowY / SCALE) - 1)) {
               setCherryLocation();
-            else
+            } else {
               cherry = null;
+            }
           }
         }
       }
     }
   }
 
-  public boolean noTailAt(int x, int y) { // if tail exist on (x,y) point - return false, else -
-                                          // true
+  /** if tail exist on (x,y) point - return false, else - true */
+  public boolean noTailAt(int x, int y) {
     for (int i = 1; i < snakeParts.size() - 1; i++) {
-      if (snakeParts.get(i).equals(new Point(x, y)))
+      if (snakeParts.get(i).equals(new Point(x, y))) {
         return false;
+      }
     }
     return true;
   }
 
+  /** Set random cherry location */
   public void setCherryLocation() {
-    cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));// set
-                                                                                         // random
-                                                                                         // cherry
-                                                                                         // location
+    cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
     for (int i = 0; i < snakeParts.size(); i++) {
-      if (head.getLocation().equals(cherry.getLocation())) { // if cherry on the head - change
-                                                             // location
+      /** if cherry on the head - change location */
+      if (head.getLocation().equals(cherry.getLocation())) {
         cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
-        i = 0; // restart checking
+        i = 0;
       }
-      if (snakeParts.get(i).getLocation().equals(cherry.getLocation())) { // if cherry on the snake
-                                                                          // part - change location
+      /** if cherry on the snake part - change location */
+      if (snakeParts.get(i).getLocation().equals(cherry.getLocation())) {
         cherry.setLocation(random.nextInt(windowX / SCALE), random.nextInt(windowY / SCALE));
         i = 0;
       }
@@ -316,6 +336,7 @@ public class Snake implements ActionListener, KeyListener {
     return started;
   }
 
+  /** this method change speed of timer ticks */
   public void changeTimer(int n) {
     timer = new Timer(n, this);
   }
@@ -324,16 +345,21 @@ public class Snake implements ActionListener, KeyListener {
   public void keyPressed(KeyEvent e) {
     if (started) {
       int i = e.getKeyCode();
-      if (i == KeyEvent.VK_LEFT)
+      if (i == KeyEvent.VK_LEFT) {
         left = true;
-      if (i == KeyEvent.VK_RIGHT)
+      }
+      if (i == KeyEvent.VK_RIGHT) {
         right = true;
-      if (i == KeyEvent.VK_UP)
+      }
+      if (i == KeyEvent.VK_UP) {
         up = true;
-      if (i == KeyEvent.VK_DOWN)
+      }
+      if (i == KeyEvent.VK_DOWN) {
         down = true;
-      if (i == KeyEvent.VK_SPACE)
+      }
+      if (i == KeyEvent.VK_SPACE) {
         paused = !paused;
+      }
     }
   }
 
@@ -341,14 +367,18 @@ public class Snake implements ActionListener, KeyListener {
   public void keyReleased(KeyEvent e) {
     if (started) {
       int i = e.getKeyCode();
-      if (i == KeyEvent.VK_LEFT)
+      if (i == KeyEvent.VK_LEFT) {
         left = false;
-      if (i == KeyEvent.VK_RIGHT)
+      }
+      if (i == KeyEvent.VK_RIGHT) {
         right = false;
-      if (i == KeyEvent.VK_UP)
+      }
+      if (i == KeyEvent.VK_UP) {
         up = false;
-      if (i == KeyEvent.VK_DOWN)
+      }
+      if (i == KeyEvent.VK_DOWN) {
         down = false;
+      }
     }
   }
 
