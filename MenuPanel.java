@@ -66,8 +66,8 @@ public class MenuPanel extends JPanel implements ChangeListener {
     add(speed);
   }
 
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
+  public void paintComponent(Graphics gComponent) {
+    super.paintComponent(gComponent);
     String str = "";
     switch (value) {
       case 0:
@@ -84,8 +84,8 @@ public class MenuPanel extends JPanel implements ChangeListener {
         break;
     }
     String string = "SPEED " + str;
-    g.setColor(Color.BLACK);
-    g.drawString(string, (int) getWidth() / 2 - string.length(), 100);
+    gComponent.setColor(Color.BLACK);
+    gComponent.drawString(string, (int) getWidth() / 2 - string.length(), 100);
   }
 
   @Override
