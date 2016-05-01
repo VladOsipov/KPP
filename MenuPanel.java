@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -29,19 +28,19 @@ public class MenuPanel extends JPanel implements ChangeListener {
   private final int mediumSpeed = 70;
   private final int hardSpeed = 40;
   private final int unrealSpeed = 20;
-
   private UIManager.LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
-
 
   MenuPanel() {
     lookAndFeel = new JButton("LookAndFeel");
     lookAndFeel.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        if (counter == lafs.length - 1) {
+          counter = 0;
+        }
         try {
-          if (counter == lafs.length - 1)
-            counter = 0;
           UIManager.setLookAndFeel(lafs[++counter].getClassName());
           SwingUtilities.updateComponentTreeUI(Snake.jFrame);
+          repaint();
         } catch (Exception ee) {
           ee.printStackTrace();
         }
@@ -52,7 +51,7 @@ public class MenuPanel extends JPanel implements ChangeListener {
     btn = new JButton("Старт");
     btn.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Snake.snake.startGame();
+        Snake.snake.startGame("standart");
       }
     });
     add(btn);
@@ -60,19 +59,19 @@ public class MenuPanel extends JPanel implements ChangeListener {
     auto = new JButton("Авто");
     auto.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Snake.snake.startAuto();
+        Snake.snake.startGame("auto");
       }
     });
     add(auto);
 
     speed = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
     speed.addChangeListener(this);
-    speed.setMajorTickSpacing(10);
+    speed.setMajorTickSpacing(1);
     speed.setPaintTicks(true);
     add(speed);
   }
 
-  /** paintComponent method*/
+  /** paintComponent method */
   public void paintComponent(Graphics gComponent) {
     super.paintComponent(gComponent);
     String str = "";

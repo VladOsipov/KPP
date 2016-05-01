@@ -4,22 +4,27 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class RenderPanel extends JPanel {
 
-  private final int YELLOW_COLOR = 16646040;
-  private final int GREEN_COLOR = 10026908;
-  private Color YELLOW = new Color(YELLOW_COLOR);
-  private Color GREEN = new Color(GREEN_COLOR);
+  private final int YELLOW_RGB = 16646040;
+  private final int GREEN_RGB = 10026908;
+  private Color YELLOW;
+  private Color GREEN;
   private final int screenStartX = 0;
   private final int screenStartY = 0;
 
-  /** this method paint the game*/
+  RenderPanel() {
+    YELLOW = new Color(YELLOW_RGB);
+    GREEN = new Color(GREEN_RGB);
+  }
+
+  /** this method paint the game */
   public void paintComponent(Graphics gComponent) {
     if (Snake.snake.started()) {
-
       super.paintComponent(gComponent);
       gComponent.setColor(YELLOW);
       /** Fill all window */
@@ -46,7 +51,8 @@ public class RenderPanel extends JPanel {
             Snake.SCALE, Snake.SCALE);
       String string = "Score " + snake.getScore() + ", Length " + snake.getTailLength();
       gComponent.setColor(Color.BLACK);
-      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2, 30);
+      gComponent.drawString(string, (int) getWidth() / 2 - string.length() / 2 -1, 30);
     }
   }
+
 }
